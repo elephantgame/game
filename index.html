@@ -16,11 +16,12 @@
         }
 
         body {
-            min-height: 100vh;
+            height: 100vh;
             display: flex;
             align-items: center;
             justify-content: center;
             font-family: sans-serif;
+            overflow: hidden;
         }
     </style>
 </head>
@@ -46,11 +47,11 @@
             var size = 'xl';
             var points = {
                 'xl': [
-                    [[224, 50], [276, 64], [276, 112], [234, 129], [170, 109], [119, 96], [77, 106], [67, 148], [22, 190], [16, 255], [33, 306], [67, 306], [74, 260], [113, 260], [119, 306], [163, 306], [167, 250], [178, 204], [198, 163]]
+                    [[226, 66], [264, 69], [281, 105], [264, 130], [229, 137], [190, 125], [155, 110], [108, 109], [86, 154], [51, 182], [38, 226], [43, 262], [56, 296], [86, 296], [88, 262], [109, 246], [129, 262], [134, 296], [169, 296], [175, 247], [185, 207], [205, 167]]
                 ]
             };
             var etape = 0;
-            var nbPoints = 19;
+            var nbPoints = 22;
             var startPoint = 0;
 
             drawPoints();
@@ -217,6 +218,33 @@
                     endGame();
                     return false;
                 }
+
+                var mouseX = event.changedTouches[0].pageX - canvas.offsetLeft;
+                var mouseY = event.changedTouches[0].pageY - canvas.offsetTop;
+
+                // on check si on termine bien sur le point suivant
+                if (
+                    Math.abs(startX - points[size][etape][startPoint][0]) <= 10 &&
+                    Math.abs(startY - points[size][etape][startPoint][1]) <= 10 &&
+                    Math.abs(mouseX - points[size][etape][startPoint + 1][0]) <= 10 &&
+                    Math.abs(mouseY - points[size][etape][startPoint + 1][1]) <= 10
+                ) {
+                    startX = points[size][etape][startPoint][0];
+                    startY = points[size][etape][startPoint][1];
+                    mouseX = points[size][etape][startPoint + 1][0];
+                    mouseY = points[size][etape][startPoint + 1][1];
+                    lines.push({
+                        x1: startX,
+                        y1: startY,
+                        x2: mouseX,
+                        y2: mouseY
+                    });
+                    startPoint++;
+                    startX = points[size][etape][startPoint][0];
+                    startY = points[size][etape][startPoint][1];
+                }
+
+                drawLines();
             }
 
             function drawLines(toX, toY) {
@@ -241,9 +269,9 @@
             }
 
             function drawLine(line) {
-                context.strokeStyle = "#d7d7d7";
+                context.strokeStyle = "#000";
                 context.lineJoin = "round";
-                context.lineWidth = 8;
+                context.lineWidth = 4;
 
                 context.beginPath();
                 context.moveTo(line.x1, line.y1);
@@ -253,13 +281,14 @@
 
             function drawPoints() {
                 // on dessine le trait entre les points 4 et 10
-                // context.strokeStyle = "#474747";
-                // context.lineJoin = "round";
-                // context.lineWidth = 8;
-                // context.beginPath();
-                // context.moveTo(points[size][etape][3][0], points[size][etape][3][1]);
-                // context.lineTo(points[size][etape][9][0], points[size][etape][9][1]);
-                // context.stroke();
+                context.strokeStyle = "#000";
+                context.lineJoin = "round";
+                context.lineWidth = 4;
+                context.beginPath();
+                context.moveTo(points[size][etape][8][0], points[size][etape][8][1]);
+                context.arcTo(108, 173, 138, 175, 50);
+                context.stroke();
+
 
                 for (var i = 0; i < points[size][etape].length; i++) {
                     var centerX = points[size][etape][i][0];
@@ -293,7 +322,7 @@
 
                         context.beginPath();
                         context.arc(centerX, centerY, 6, 0, 2 * Math.PI, false);
-                        context.fillStyle = '#f00';
+                        context.fillStyle = '#000';
                         context.fill();
                     }
                 }
