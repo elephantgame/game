@@ -293,16 +293,13 @@
                 for (var i = 0; i < points[size][etape].length; i++) {
                     var centerX = points[size][etape][i][0];
                     var centerY = points[size][etape][i][1];
-                    var radius = 8;
+                    var radius = 6;
 
                     // le dessin du point en lui même
                     context.beginPath();
                     context.arc(centerX, centerY, radius, 0, 2 * Math.PI, false);
-                    context.fillStyle = '#fff';
+                    context.fillStyle = '#000';
                     context.fill();
-                    context.lineWidth = 2;
-                    context.strokeStyle = '#000';
-                    context.stroke();
 
                     // le texte avec le numéro du point
                     context.font = "12px 'Arial'";
