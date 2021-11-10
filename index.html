@@ -152,10 +152,10 @@
                 drawLines();
             }
 
-//RESPONSIVE ADAPTATION 
-document.querySelector('#game').ontouchstart = function (e) {
-                var mouseX = e.pageX - this.offsetLeft;
-                var mouseY = e.pageY - this.offsetTop;
+            //RESPONSIVE ADAPTATION 
+            document.querySelector('#game').ontouchstart = function (e) {
+                var mouseX = e.touches[0].pageX - this.offsetLeft;
+                var mouseY = e.touches[0].pageY - this.offsetTop;
                 paint = true;
                 startX = mouseX;
                 startY = mouseY;
@@ -168,8 +168,8 @@ document.querySelector('#game').ontouchstart = function (e) {
                         return false;
                     }
 
-                    var mouseX = e.pageX - this.offsetLeft;
-                    var mouseY = e.pageY - this.offsetTop;
+                    var mouseX = e.touches[0].pageX - this.offsetLeft;
+                    var mouseY = e.touches[0].pageY - this.offsetTop;
 
                     // on check si on démarre bien du point courant
                     if (
@@ -205,15 +205,11 @@ document.querySelector('#game').ontouchstart = function (e) {
                 }
             };
 
-            document.querySelector('#game').ontouchstart = function (e) {
-                handleMouse(e);
-            };
-
             document.querySelector('#game').ontouchend = function (e) {
-                handleMouse(e);
+                handleTouch(e);
             };
 
-            function handleMouse(event) {
+            function handleTouch(event) {
                 paint = false;
                 if (startPoint == nbPoints - 1) {
                     event.preventDefault();
@@ -221,33 +217,6 @@ document.querySelector('#game').ontouchstart = function (e) {
                     endGame();
                     return false;
                 }
-
-                var mouseX = event.pageX - canvas.offsetLeft;
-                var mouseY = event.pageY - canvas.offsetTop;
-
-                // on check si on termine bien sur le point suivant
-                if (
-                    Math.abs(startX - points[size][etape][startPoint][0]) <= 10 &&
-                    Math.abs(startY - points[size][etape][startPoint][1]) <= 10 &&
-                    Math.abs(mouseX - points[size][etape][startPoint + 1][0]) <= 10 &&
-                    Math.abs(mouseY - points[size][etape][startPoint + 1][1]) <= 10
-                ) {
-                    startX = points[size][etape][startPoint][0];
-                    startY = points[size][etape][startPoint][1];
-                    mouseX = points[size][etape][startPoint + 1][0];
-                    mouseY = points[size][etape][startPoint + 1][1];
-                    lines.push({
-                        x1: startX,
-                        y1: startY,
-                        x2: mouseX,
-                        y2: mouseY
-                    });
-                    startPoint++;
-                    startX = points[size][etape][startPoint][0];
-                    startY = points[size][etape][startPoint][1];
-                }
-
-                drawLines();
             }
 
             function drawLines(toX, toY) {
@@ -307,7 +276,7 @@ document.querySelector('#game').ontouchstart = function (e) {
                     context.stroke();
 
                     // le texte avec le numéro du point
-                    context.font = "16px 'Arial'";
+                    context.font = "12px 'Arial'";
                     context.fillStyle = '#000';
                     context.textAlign = "center";
                     context.fillText(i + 1, centerX, centerY - 15);
