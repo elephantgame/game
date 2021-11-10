@@ -26,8 +26,339 @@
 </head>
 
 <body>
-<h1>Coming Soon</h1>
+    <div id="game-canvas" jeu="{{jeu.etape}}"></div>
     <script type="text/javascript">
+        (function () {
+            var canvasDiv = document.getElementById('game-canvas');
+            var canvas = document.createElement('canvas');
+            canvas.setAttribute('width', 320);
+            canvas.setAttribute('height', 350);
+            canvas.setAttribute('id', 'game');
+            canvasDiv.appendChild(canvas);
+            if (typeof G_vmlCanvasManager != 'undefined') {
+                canvas = G_vmlCanvasManager.initElement(canvas);
+            }
+            var context = canvas.getContext("2d");
+            var startX;
+            var startY;
+            var paint;
+            var lines = [];
+            var size = 'xl';
+            var points = {
+                'xl': [
+                    [[224, 50], [276, 64], [276, 112], [234, 129], [170, 109], [119, 96], [77, 106], [67, 148], [22, 190], [16, 255], [33, 306], [67, 306], [74, 260], [113, 260], [119, 306], [163, 306], [167, 250], [178, 204], [198, 163]]
+                ]
+            };
+            var etape = 0;
+            var nbPoints = 19;
+            var startPoint = 0;
+
+            drawPoints();
+
+            document.querySelector('#game').onmousedown = function (e) {
+                var mouseX = e.pageX - this.offsetLeft;
+                var mouseY = e.pageY - this.offsetTop;
+                paint = true;
+                startX = mouseX;
+                startY = mouseY;
+            };
+
+            document.querySelector('#game').onmousemove = function (e) {
+                if (paint) {
+                    if (startPoint == nbPoints - 1) {
+                        e.preventDefault();
+                        return false;
+                    }
+
+                    var mouseX = e.pageX - this.offsetLeft;
+                    var mouseY = e.pageY - this.offsetTop;
+
+                    // on check si on démarre bien du point courant
+                    if (
+                        Math.abs(startX - points[size][etape][startPoint][0]) > 10 &&
+                        Math.abs(startY - points[size][etape][startPoint][1]) > 10
+                    ) {
+                        return false;
+                    }
+
+                    // on check si on termine bien sur le point suivant
+                    if (
+                        Math.abs(startX - points[size][etape][startPoint][0]) < 10 &&
+                        Math.abs(startY - points[size][etape][startPoint][1]) < 10 &&
+                        Math.abs(mouseX - points[size][etape][startPoint + 1][0]) < 10 &&
+                        Math.abs(mouseY - points[size][etape][startPoint + 1][1]) < 10
+                    ) {
+                        startX = points[size][etape][startPoint][0];
+                        startY = points[size][etape][startPoint][1];
+                        mouseX = points[size][etape][startPoint + 1][0];
+                        mouseY = points[size][etape][startPoint + 1][1];
+                        lines.push({
+                            x1: startX,
+                            y1: startY,
+                            x2: mouseX,
+                            y2: mouseY
+                        });
+                        startPoint++;
+                        startX = points[size][etape][startPoint][0];
+                        startY = points[size][etape][startPoint][1];
+                    }
+
+                    drawLines(mouseX, mouseY);
+                }
+            };
+
+            document.querySelector('#game').onmouseup = function (e) {
+                handleMouse(e);
+            };
+
+            document.querySelector('#game').onmouseleave = function (e) {
+                handleMouse(e);
+            };
+
+            function handleMouse(event) {
+                paint = false;
+                if (startPoint == nbPoints - 1) {
+                    event.preventDefault();
+                    console.log("Victoire handleMouse");
+                    endGame();
+                    return false;
+                }
+
+                var mouseX = event.pageX - canvas.offsetLeft;
+                var mouseY = event.pageY - canvas.offsetTop;
+
+                // on check si on termine bien sur le point suivant
+                if (
+                    Math.abs(startX - points[size][etape][startPoint][0]) <= 10 &&
+                    Math.abs(startY - points[size][etape][startPoint][1]) <= 10 &&
+                    Math.abs(mouseX - points[size][etape][startPoint + 1][0]) <= 10 &&
+                    Math.abs(mouseY - points[size][etape][startPoint + 1][1]) <= 10
+                ) {
+                    startX = points[size][etape][startPoint][0];
+                    startY = points[size][etape][startPoint][1];
+                    mouseX = points[size][etape][startPoint + 1][0];
+                    mouseY = points[size][etape][startPoint + 1][1];
+                    lines.push({
+                        x1: startX,
+                        y1: startY,
+                        x2: mouseX,
+                        y2: mouseY
+                    });
+                    startPoint++;
+                    startX = points[size][etape][startPoint][0];
+                    startY = points[size][etape][startPoint][1];
+                }
+
+                drawLines();
+            }
+
+//RESPONSIVE ADAPTATION 
+document.querySelector('#game').ontouchstart = function (e) {
+                var mouseX = e.pageX - this.offsetLeft;
+                var mouseY = e.pageY - this.offsetTop;
+                paint = true;
+                startX = mouseX;
+                startY = mouseY;
+            };
+
+            document.querySelector('#game').ontouchmove = function (e) {
+                if (paint) {
+                    if (startPoint == nbPoints - 1) {
+                        e.preventDefault();
+                        return false;
+                    }
+
+                    var mouseX = e.pageX - this.offsetLeft;
+                    var mouseY = e.pageY - this.offsetTop;
+
+                    // on check si on démarre bien du point courant
+                    if (
+                        Math.abs(startX - points[size][etape][startPoint][0]) > 10 &&
+                        Math.abs(startY - points[size][etape][startPoint][1]) > 10
+                    ) {
+                        return false;
+                    }
+
+                    // on check si on termine bien sur le point suivant
+                    if (
+                        Math.abs(startX - points[size][etape][startPoint][0]) < 10 &&
+                        Math.abs(startY - points[size][etape][startPoint][1]) < 10 &&
+                        Math.abs(mouseX - points[size][etape][startPoint + 1][0]) < 10 &&
+                        Math.abs(mouseY - points[size][etape][startPoint + 1][1]) < 10
+                    ) {
+                        startX = points[size][etape][startPoint][0];
+                        startY = points[size][etape][startPoint][1];
+                        mouseX = points[size][etape][startPoint + 1][0];
+                        mouseY = points[size][etape][startPoint + 1][1];
+                        lines.push({
+                            x1: startX,
+                            y1: startY,
+                            x2: mouseX,
+                            y2: mouseY
+                        });
+                        startPoint++;
+                        startX = points[size][etape][startPoint][0];
+                        startY = points[size][etape][startPoint][1];
+                    }
+
+                    drawLines(mouseX, mouseY);
+                }
+            };
+
+            document.querySelector('#game').ontouchstart = function (e) {
+                handleMouse(e);
+            };
+
+            document.querySelector('#game').ontouchend = function (e) {
+                handleMouse(e);
+            };
+
+            function handleMouse(event) {
+                paint = false;
+                if (startPoint == nbPoints - 1) {
+                    event.preventDefault();
+                    console.log("Victoire handleMouse");
+                    endGame();
+                    return false;
+                }
+
+                var mouseX = event.pageX - canvas.offsetLeft;
+                var mouseY = event.pageY - canvas.offsetTop;
+
+                // on check si on termine bien sur le point suivant
+                if (
+                    Math.abs(startX - points[size][etape][startPoint][0]) <= 10 &&
+                    Math.abs(startY - points[size][etape][startPoint][1]) <= 10 &&
+                    Math.abs(mouseX - points[size][etape][startPoint + 1][0]) <= 10 &&
+                    Math.abs(mouseY - points[size][etape][startPoint + 1][1]) <= 10
+                ) {
+                    startX = points[size][etape][startPoint][0];
+                    startY = points[size][etape][startPoint][1];
+                    mouseX = points[size][etape][startPoint + 1][0];
+                    mouseY = points[size][etape][startPoint + 1][1];
+                    lines.push({
+                        x1: startX,
+                        y1: startY,
+                        x2: mouseX,
+                        y2: mouseY
+                    });
+                    startPoint++;
+                    startX = points[size][etape][startPoint][0];
+                    startY = points[size][etape][startPoint][1];
+                }
+
+                drawLines();
+            }
+
+            function drawLines(toX, toY) {
+                // clear the canvas
+                context.clearRect(0, 0, context.canvas.width, context.canvas.height);
+
+                // redraw all previous lines
+                for (var i = 0; i < lines.length; i++) {
+                    drawLine(lines[i]);
+                }
+
+                // draw the current line
+                drawLine({
+                    x1: startX,
+                    y1: startY,
+                    x2: toX,
+                    y2: toY
+                });
+
+                // redraw the points
+                drawPoints();
+            }
+
+            function drawLine(line) {
+                context.strokeStyle = "#d7d7d7";
+                context.lineJoin = "round";
+                context.lineWidth = 8;
+
+                context.beginPath();
+                context.moveTo(line.x1, line.y1);
+                context.lineTo(line.x2, line.y2);
+                context.stroke();
+            }
+
+            function drawPoints() {
+                // on dessine le trait entre les points 4 et 10
+                // context.strokeStyle = "#474747";
+                // context.lineJoin = "round";
+                // context.lineWidth = 8;
+                // context.beginPath();
+                // context.moveTo(points[size][etape][3][0], points[size][etape][3][1]);
+                // context.lineTo(points[size][etape][9][0], points[size][etape][9][1]);
+                // context.stroke();
+
+                for (var i = 0; i < points[size][etape].length; i++) {
+                    var centerX = points[size][etape][i][0];
+                    var centerY = points[size][etape][i][1];
+                    var radius = 8;
+
+                    // le dessin du point en lui même
+                    context.beginPath();
+                    context.arc(centerX, centerY, radius, 0, 2 * Math.PI, false);
+                    context.fillStyle = '#fff';
+                    context.fill();
+                    context.lineWidth = 2;
+                    context.strokeStyle = '#000';
+                    context.stroke();
+
+                    // le texte avec le numéro du point
+                    context.font = "16px 'Arial'";
+                    context.fillStyle = '#000';
+                    context.textAlign = "center";
+                    context.fillText(i + 1, centerX, centerY - 15);
+                };
+
+                drawActivePoints();
+            }
+
+            function drawActivePoints() {
+                for (var i = 0; i < points[size][etape].length; i++) {
+                    if (i <= startPoint && startPoint > 0) {
+                        var centerX = points[size][etape][i][0];
+                        var centerY = points[size][etape][i][1];
+
+                        context.beginPath();
+                        context.arc(centerX, centerY, 6, 0, 2 * Math.PI, false);
+                        context.fillStyle = '#f00';
+                        context.fill();
+                    }
+                }
+            }
+
+            function reveal() {
+                lines = [];
+                drawLines();
+                var i = 0;
+
+                var revealInterval = setInterval(function () {
+                    startX = points[size][etape][i][0];
+                    startY = points[size][etape][i][1];
+                    mouseX = points[size][etape][i + 1][0];
+                    mouseY = points[size][etape][i + 1][1];
+                    lines.push({
+                        x1: startX,
+                        y1: startY,
+                        x2: mouseX,
+                        y2: mouseY
+                    });
+
+                    drawLines();
+                    i++;
+                    if (!points[size][etape][i]) {
+                        clearInterval(revealInterval);
+                    }
+                }, 400);
+            }
+
+            function endGame() {
+
+            }
+        })();
     </script>
 </body>
 
