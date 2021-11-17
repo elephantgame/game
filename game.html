@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=no">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Elephant Game</title>
     <link rel="stylesheet" href="reset.css">
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -26,7 +26,43 @@
             display: flex;
             align-items: center;
             justify-content: center;
+            flex-direction: column;
             font-family: 'Poppins', sans-serif;
+        }
+
+        h1 {
+            text-align: center;
+            font-size: 1.5rem;
+            line-height: 2rem;
+        }
+        
+        .translate-0 {
+            transform: translateY(-50px)!important;
+            transition: all 1s ease-in-out;
+        }
+
+        .translate-500 {
+            transform: translateY(500px)!important;
+            transition: all 1s ease-in-out;
+        }
+
+        .opacity-0 {
+            opacity: 0!important;
+            transition: all .5s ease-in-out;
+        }
+
+        .opacity-1 {
+            opacity: 1!important;
+            transition: all .5s ease-in-out;
+        }
+
+        .logo {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -75%);
+            opacity: 0;
+            z-index: -1;
         }
 
         .desktop {
@@ -41,7 +77,26 @@
             color: black;
             padding-top: 20px;
         }
+        .skip, .endgame{
+            display: block;
+            text-decoration: none;
+            width: 200px;
+            text-align : center;
+            padding: 20px;
+            background-color: #3E66FB;
+            margin-top: 30px;
+            border-radius: 10px;
+            line-height: 1.4rem;
+            color: white;
+            transition: all 1s ease-in-out;
+        }
 
+        .endgame {
+            opacity: 0;
+            transform: translateY(500px);
+            transition: all 1s ease-in-out;
+        }
+        
         @media (min-width: 500px) {
             .desktop {
                 display: flex;
@@ -61,7 +116,10 @@
 </head>
 
 <body>
-    <div id="game-canvas" jeu="{{jeu.etape}}"></div>
+    <h1>Reliez les points en 30 secondes !</h1>
+    <div id="game-canvas" jeu="{{jeu.etape}}"><img class="logo" src="img/Logo.svg" /></div>
+    <p class="skip">Passer le jeu</p>
+    <a class="endgame" href="/game/endscreen.html">Découvrir l'évenement</p>
     <div class="desktop">
         <img src="img/QR.svg" />
         <p>Notre site est seulement disponible sur mobile.</p>
@@ -199,6 +257,9 @@
                 paint = true;
                 startX = mouseX;
                 startY = mouseY;
+            };
+            document.querySelector('.skip').ontouchstart = function (e) {
+                endGame()
             };
 
             document.querySelector('#game').ontouchstart = function (e) {
@@ -390,7 +451,12 @@
             }
 
             function endGame() {
-
+                document.querySelector('canvas').classList.add('opacity-0')
+                document.querySelector('.logo').classList.add('opacity-1')
+                document.querySelector('.skip').classList.add('opacity-0')
+                document.querySelector('.skip').classList.add('translate-500')
+                document.querySelector('.endgame').classList.add('opacity-1')
+                document.querySelector('.endgame').classList.add('translate-0')
             }
         })();
 
