@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="fr">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Elephant Game</title>
+    <link rel="stylesheet" href="reset.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap"
+        rel="stylesheet">
+    <style type="text/css">
+        /*Global*/
+        *,
+        *::before,
+        *::after {
+            box-sizing: border-box;
+        }
+
+        body {
+            width: 100vw;
+            height: 100vh;
+            text-align: center;
+            font-family: 'Poppins', sans-serif;
+        }
+
+        #compte_a_rebours {
+            padding-top: 20%;
+            font-weight: 900;
+            font-size: 3.5rem;
+            line-height: 5rem;
+        }
+
+        .desktop {
+            display: none;
+        }
+
+        .desktop img {
+            width: 300px;
+        }
+
+        .desktop p {
+            color: black;
+            padding-top: 20px;
+        }
+
+        @media (min-width: 500px) {
+            .desktop {
+                display: flex;
+                flex-direction: column;
+                align-items: center;
+                justify-content: center;
+                position: absolute;
+                top: 50%;
+                left: 50%;
+                transform: translate(-50%, -50%);
+                background-color: white;
+                width: 100vw;
+                height: 100vh;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div id="compte_a_rebours"></div>
+    <div class="desktop">
+        <img src="img/QR.svg" />
+        <p>Notre site est seulement disponible sur mobile.</p>
+        <p>Scan le QR code ci-dessus pour t'y rendre.</p>
+    </div>
+    <script type="text/javascript">
+        function compte_a_rebours() {
+            var compte_a_rebours = document.getElementById("compte_a_rebours");
+            var date_actuelle = new Date();
+            var date_evenement = new Date("Dec 1 18:00:00 2021");
+            var total_secondes = (date_evenement - date_actuelle) / 1000;
+
+            if (total_secondes > 0) {
+                // A faire, tous nos calculs
+            }
+            else // Si total_secondes == 0 (puisque l'on a prit sa valeur absolue)
+            {
+                compte_a_rebours.innerHTML = 'Compte à rebours terminé.';
+            }
+            var jours = Math.floor(total_secondes / (60 * 60 * 24));
+            var heures = Math.floor((total_secondes - (jours * 60 * 60 * 24)) / (60 * 60));
+            minutes = Math.floor((total_secondes - ((jours * 60 * 60 * 24 + heures * 60 * 60))) / 60);
+            secondes = Math.floor(total_secondes - ((jours * 60 * 60 * 24 + heures * 60 * 60 + minutes * 60)));
+            compte_a_rebours.innerHTML = jours + 'J<br>' + heures + 'H<br>' + minutes + 'MIN<br>' + secondes + 'S';
+            var actualisation = setTimeout("compte_a_rebours();", 1000);
+        }
+        compte_a_rebours();
+    </script>
+</body>
+
+</html>
