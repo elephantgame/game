@@ -25,13 +25,77 @@
             height: 100vh;
             text-align: center;
             font-family: 'Poppins', sans-serif;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+        }
+
+        body::before {
+            content: '';
+            display: block;
+            position: absolute;
+            z-index: -2;
+            width: 100%;
+            height: 100%;
+            background: url('img/background.jpg');
+            background-size: auto 100%;
+            background-position: center;
+            background-repeat: no-repeat;
+        }
+
+        body::after {
+            content: '';
+            display: block;
+            position: absolute;
+            z-index: -2;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
         }
 
         #compte_a_rebours {
-            padding-top: 20%;
+            color: white;
             font-weight: 900;
-            font-size: 3.5rem;
-            line-height: 5rem;
+            font-size: 2rem;
+        }
+
+        .adress {
+            margin-top: 25px;
+            padding: 15px;
+            border-radius: 10px 10px 0 0;
+            border-bottom: none;
+            color: white;
+            background: rgba(255, 255, 255, 0.2);
+            backdrop-filter: blur(10px);
+        }
+
+        .info {
+            margin-top : 30px;
+            color: white;
+        }
+
+        .social_content {
+            margin-top : 20px;
+            display: flex;
+            width: 50%;
+            justify-content: space-around
+        }
+
+        .socialmedia {
+            width: 50px;
+            height: 50px;
+            background-size: 100%;
+            background-position: center;
+            background-repeat: no-repeat;
+        }
+
+        .facebook {
+            background-image: url(img/facebook.svg)
+        }
+
+        .instagram {
+            background-image: url(img/insta.svg)
         }
 
         .desktop {
@@ -67,6 +131,17 @@
 
 <body>
     <div id="compte_a_rebours"></div>
+    <p class="info">Rendez-vous à la terrasse de l'île,<br> le 1er décembre de 18h à 22h <br>pour un after work animé !</p>
+    <p class="adress">21 Quai des antilles, 44200 Nantes</p>
+    <iframe
+        src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d2710.799221342584!2d-1.5750640841962058!3d47.20094222390512!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x4805ebf6574c6d35%3A0x39588569344cdb20!2sLa%20Terrasse%20De%20L&#39;%C3%AEle%20(Bar%20%C3%A0%20tapas)!5e0!3m2!1sfr!2sfr!4v1637236320958!5m2!1sfr!2sfr"
+        width="90%" height="20%x" frameborder="0" style="border: 0; border-radius: 10px;" allowfullscreen=""
+        aria-hidden="false" tabindex="0"></iframe>
+        <p class="info">Plus d'informations sur l'évenement :</p>
+    <div class="social_content">
+        <a class="socialmedia instagram" href="https://www.instagram.com/elephant_game_nantes/" target="blank_"></a>
+        <a class="socialmedia facebook" href="https://www.facebook.com/profile.php?id=100074425886435" target="blank_"></a>
+    </div>
     <div class="desktop">
         <img src="img/QR.svg" />
         <p>Notre site est seulement disponible sur mobile.</p>
@@ -90,7 +165,7 @@
             var heures = Math.floor((total_secondes - (jours * 60 * 60 * 24)) / (60 * 60));
             minutes = Math.floor((total_secondes - ((jours * 60 * 60 * 24 + heures * 60 * 60))) / 60);
             secondes = Math.floor(total_secondes - ((jours * 60 * 60 * 24 + heures * 60 * 60 + minutes * 60)));
-            compte_a_rebours.innerHTML = jours + 'J<br>' + heures + 'H<br>' + minutes + 'MIN<br>' + secondes + 'S';
+            compte_a_rebours.innerHTML = jours + 'J ' + heures + 'H ' + minutes + 'MIN ' + secondes + 'S';
             var actualisation = setTimeout("compte_a_rebours();", 1000);
         }
         compte_a_rebours();
